@@ -45,15 +45,62 @@ struct WidgetCraftExtensionEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        VStack {
-            Text("Time:")
-            Text(entry.date, style: .time)
-
-            Text("Favorite Emoji:")
-            Text(entry.configuration.favoriteEmoji)
+        VStack(alignment: .leading,spacing: 0){
+            Text("4,790")
+                .font(.system(size: 30,weight: .bold).monospaced())
+            Text("Steps")
+                .font(.system(size: 20).monospaced())
+                .foregroundStyle(.secondary)
+            Spacer()
+            
+            HStack{
+                Image(systemName: "bolt.fill")
+                Text("176 Days!")
+            }
+            .font(.system(size: 16,weight: .bold).monospaced())
+            .padding(.bottom,4)
+            
+            StepProgress(progress: 4)
+            
         }
+        .foregroundStyle(.green)
     }
 }
+
+
+
+struct StepProgress:View {
+    let progress: Int
+    let rows : Int = 2
+    let segmentsPerRow:Int = 5
+    var body: some View {
+        VStack(spacing: 3){
+            
+            ForEach(1...rows,id:\.self){ row in
+                
+                HStack(spacing:3){
+                    ForEach(1...segmentsPerRow,id:\.self) { segment in
+                        let index = (row - 1) * segmentsPerRow + segment
+                        let isFilled = index <= progress
+                        Rectangle()
+                            .frame(height:5)
+                            .foregroundStyle(isFilled ? .primary : .secondary)
+                    }
+                }
+                
+            }
+            
+            
+            
+        }
+
+    }
+}
+
+
+
+
+
 
 struct WidgetCraftExtension: Widget {
     let kind: String = "WidgetCraftExtension"
@@ -61,7 +108,7 @@ struct WidgetCraftExtension: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
             WidgetCraftExtensionEntryView(entry: entry)
-                .containerBackground(.fill.tertiary, for: .widget)
+                .containerBackground(.black, for: .widget)
         }
     }
 }
